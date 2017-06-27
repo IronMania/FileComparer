@@ -33,9 +33,9 @@ namespace FileComparer
             }
             
 
-            var result = _comparer.Compare(stream1, stream2);
+            var areStreamsEqual = _comparer.Compare(stream1, stream2);
 
-            Console.WriteLine(result ? "Files are the Same" : "Files are not the Same");
+            Console.WriteLine(areStreamsEqual ? "Files are the Same" : "Files are not the Same");
 
             stream1.Close();
             stream2.Close();
