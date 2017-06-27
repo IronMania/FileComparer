@@ -9,14 +9,14 @@ namespace FileComparer
             if (args.Length != 2)
             {
                 Console.WriteLine(
-                    "Arguments do not Match. Pass files as Arguments to the program. Press any key to exit.");
+                    "Arguments do not Match. Pass folders as Arguments to the program. Press any key to exit.");
                 Console.ReadKey();
                 return;
             }
 
-            var loader = new FileComparer(new HashSumComparer());
+            var loader = new FolderComparer(new DuplicateCounter(new HashForFiles()));
 
-            loader.CompareFiles(args[0], args[1]);
+            loader.Compare(args);
 
             Console.ReadKey();
         }
