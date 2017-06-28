@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FileComparer
 {
@@ -12,10 +14,10 @@ namespace FileComparer
             _counter = calculator;
         }
 
-        public void Compare(string[] folders)
+        public void Compare( IEnumerable<string> folders,List<string> pattern)
         {
             foreach (var folder in folders)
-                AddHashsToCounter(folder);
+                AddHashsToCounter(folder,pattern);
 
             var doublets = _counter.GetAllDuplicates();
             if (doublets.Count == 0)
@@ -25,21 +27,24 @@ namespace FileComparer
             }
             Console.WriteLine("Found fallowing Duplicates:");
             foreach (var doublet in doublets)
-            {
                 doublet.Print();
-            }
         }
 
-        private void AddHashsToCounter(string folder)
+        private void AddHashsToCounter(string folder, List<string> patterns)
         {
             if (!Directory.Exists(folder))
             {
                 Console.WriteLine($"Could not find folder: {folder}");
                 return;
             }
-            var files = Directory.EnumerateFiles(folder,"*",SearchOption.AllDirectories);
-            foreach (var file in files)
-                _counter.Add(file);
+            foreach (var p in patterns)
+            {
+                var files = Directory.EnumerateFiles(folder, p, SearchOption.AllDirectories);
+                foreach (var file in files)
+                    _counter.Add(file);
+            }
+            
+
         }
     }
 }

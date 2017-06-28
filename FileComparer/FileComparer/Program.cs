@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using NDesk.Options;
 
 namespace FileComparer
 {
@@ -6,19 +8,50 @@ namespace FileComparer
     {
         public static void Main(string[] args)
         {
-            if (args.Length == 0)
+            var showHelp = false;
+            var pattern = new List<string>();
+            var p = new OptionSet
             {
-                Console.WriteLine(
-                    "Arguments do not Match. Pass folders as Arguments to the program. Press any key to exit.");
-                Console.ReadKey();
+                {
+                    "p|pattern=", "the {pattern} which should be searched. multiple patterns: p=*.cs|*.md", v =>
+                    {
+                        Console.WriteLine($"Using pattern: {v}");
+                        var patterns = v.Split('|');
+                        pattern.AddRange(patterns);
+                    }
+                },
+
+                {
+                    "h|help|?", "show this message and exit",
+                    v => showHelp = v != null
+                }
+            };
+            var directories = p.Parse(args);
+
+            if (showHelp || directories.Count == 0)
+            {
+                ShowHelp(p);
                 return;
+            }
+
+            if (pattern.Count == 0)
+            {
+                pattern.Add("*.*");
             }
 
             var loader = new FolderComparer(new DuplicateCounter(new HashForFiles()));
 
-            loader.Compare(args);
+            loader.Compare(directories, pattern);
 
             Console.ReadKey();
+        }
+
+        private static void ShowHelp(OptionSet p)
+        {
+            Console.WriteLine("Usage: FileComparer.exe [Options] C:\\Folder1 ...");
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            p.WriteOptionDescriptions(Console.Out);
         }
     }
 }
