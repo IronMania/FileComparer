@@ -61,6 +61,8 @@
     <Compile Include="HashForFiles.cs" />
     <Compile Include="IDuplicateCounter.cs" />
     <Compile Include="IHashCalculator.cs" />
+    <Compile Include="IHashFactory.cs" />
+    <Compile Include="Installer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

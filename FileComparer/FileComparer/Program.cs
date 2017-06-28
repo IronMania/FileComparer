@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Castle.MicroKernel.Registration;
+using Castle.Facilities.TypedFactory;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
-using FileComparer.Md5;
 using NDesk.Options;
 
 namespace FileComparer
@@ -15,7 +14,6 @@ namespace FileComparer
             var showHelp = false;
             var pattern = new List<string>();
 
-            string hashAlgorithm = null;
             var p = new OptionSet
             {
                 {
@@ -26,14 +24,9 @@ namespace FileComparer
                         pattern.AddRange(patterns);
                     }
                 },
-
                 {
                     "h|help|?", "show this message and exit",
                     v => showHelp = v != null
-                },
-                {
-                    "a|algorithm=", "MD5 or Sha256. MD5 is default.",
-                    v => { hashAlgorithm = v; }
                 }
             };
             var directories = p.Parse(args);
@@ -47,28 +40,25 @@ namespace FileComparer
             if (pattern.Count == 0)
                 pattern.Add("*.*");
 
-            var container = CreateContainer(hashAlgorithm);
-            var loader = container.Resolve<FolderComparer>();
+            var container = CreateContainer();
+
+            var loader =
+                container.Resolve<FolderComparer>();
             loader.Compare(directories, pattern);
 
             Console.WriteLine("Finished. Press any Key to exit.");
             Console.ReadKey();
         }
 
-        private static WindsorContainer CreateContainer(string hashAlgorithm)
+        private static WindsorContainer CreateContainer()
         {
             var container = new WindsorContainer();
+            container.Kernel.AddFacility<TypedFactoryFacility>();
             container.Install(FromAssembly.This(),
-                FromAssembly.Containing<Installer>(),
+                FromAssembly.Containing<Md5.Installer>(),
                 FromAssembly.Containing<Sha256.Installer>()
             );
-            container.Register(Classes.FromThisAssembly()
-                .Pick()
-                .WithServiceAllInterfaces()
-                .WithServiceSelf()
-                .ConfigureFor<HashForFiles>(
-                    registration => registration.DependsOn(Dependency.OnComponent("hashAlgorithm", hashAlgorithm)))
-            );
+
             return container;
         }
 
