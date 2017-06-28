@@ -31,7 +31,7 @@ namespace FileComparer
                     v => showHelp = v != null
                 },
                 {
-                    "a|algorithm=", "MD5 or Sha256 are supported. MD5 is default",
+                    "a|algorithm=", "MD5 is default. All Algorithm from https://msdn.microsoft.com/en-us/library/wet69s13(v=vs.110).aspx are supported",
                     v =>
                     {
                         var algorithm = HashAlgorithm.Create(v.ToLower());
