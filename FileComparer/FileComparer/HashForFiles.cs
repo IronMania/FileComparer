@@ -13,11 +13,6 @@ namespace FileComparer
             _hashAlgorithm = hashAlgorithm;
         }
 
-        public HashForFiles()
-        {
-            _hashAlgorithm = MD5.Create();
-        }
-
         public string GetHashSum(string file)
         {
             using (var stream = File.OpenRead(file))
@@ -26,9 +21,7 @@ namespace FileComparer
                 var sBuilder = new StringBuilder();
 
                 foreach (var data in hash)
-                {
                     sBuilder.Append(data.ToString("x2"));
-                }
 
                 return sBuilder.ToString();
             }

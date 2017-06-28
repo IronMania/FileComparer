@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D14E7DAE-732C-4D8B-BC73-4546233220AE}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{7A57AFB1-527F-4B45-ACBC-1708B2EC2E45}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FileComparer</RootNamespace>
-    <AssemblyName>FileComparer</AssemblyName>
+    <RootNamespace>FileComparer.Sha256</RootNamespace>
+    <AssemblyName>FileComparer.Sha256</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,10 +38,6 @@
       <HintPath>..\packages\Castle.Windsor.3.4.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NDesk.Options, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,28 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Duplicates.cs" />
-    <Compile Include="DuplicateCounter.cs" />
-    <Compile Include="FolderComparer.cs" />
-    <Compile Include="HashForFiles.cs" />
-    <Compile Include="IDuplicateCounter.cs" />
-    <Compile Include="IHashCalculator.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Installer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FileComparer.Md5\FileComparer.Md5.csproj">
-      <Project>{0af4fe25-2841-4e10-9bd7-12fa6b86f606}</Project>
-      <Name>FileComparer.Md5</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FileComparer.Sha256\FileComparer.Sha256.csproj">
-      <Project>{7a57afb1-527f-4b45-acbc-1708b2ec2e45}</Project>
-      <Name>FileComparer.Sha256</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

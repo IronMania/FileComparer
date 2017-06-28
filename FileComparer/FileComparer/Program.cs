@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Castle.Windsor.Installer;
+using FileComparer.Md5;
 using NDesk.Options;
 
 namespace FileComparer
@@ -13,8 +14,8 @@ namespace FileComparer
         {
             var showHelp = false;
             var pattern = new List<string>();
-            var container = new WindsorContainer();
-            container.Register(Classes.FromThisAssembly().Pick().WithServiceAllInterfaces().WithServiceSelf());
+
+            string hashAlgorithm = null;
             var p = new OptionSet
             {
                 {
@@ -31,19 +32,8 @@ namespace FileComparer
                     v => showHelp = v != null
                 },
                 {
-                    "a|algorithm=", "MD5 is default. All Algorithm from https://msdn.microsoft.com/en-us/library/wet69s13(v=vs.110).aspx are supported",
-                    v =>
-                    {
-                        var algorithm = HashAlgorithm.Create(v.ToLower());
-                        if (algorithm != null)
-                        {
-                            container.Register(Component.For<HashAlgorithm>().Instance(algorithm));
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Algorithm {v} cannot be found. Using default MD5");
-                        }
-                    }
+                    "a|algorithm=", "MD5 or Sha256. MD5 is default.",
+                    v => { hashAlgorithm = v; }
                 }
             };
             var directories = p.Parse(args);
@@ -56,11 +46,30 @@ namespace FileComparer
 
             if (pattern.Count == 0)
                 pattern.Add("*.*");
-            var loader = container.Resolve<FolderComparer>();
 
+            var container = CreateContainer(hashAlgorithm);
+            var loader = container.Resolve<FolderComparer>();
             loader.Compare(directories, pattern);
+
             Console.WriteLine("Finished. Press any Key to exit.");
             Console.ReadKey();
+        }
+
+        private static WindsorContainer CreateContainer(string hashAlgorithm)
+        {
+            var container = new WindsorContainer();
+            container.Install(FromAssembly.This(),
+                FromAssembly.Containing<Installer>(),
+                FromAssembly.Containing<Sha256.Installer>()
+            );
+            container.Register(Classes.FromThisAssembly()
+                .Pick()
+                .WithServiceAllInterfaces()
+                .WithServiceSelf()
+                .ConfigureFor<HashForFiles>(
+                    registration => registration.DependsOn(Dependency.OnComponent("hashAlgorithm", hashAlgorithm)))
+            );
+            return container;
         }
 
         private static void ShowHelp(OptionSet p)
