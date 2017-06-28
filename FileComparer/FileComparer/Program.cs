@@ -6,7 +6,7 @@ namespace FileComparer
     {
         public static void Main(string[] args)
         {
-            if (args.Length != 2)
+            if (args.Length == 0)
             {
                 Console.WriteLine(
                     "Arguments do not Match. Pass folders as Arguments to the program. Press any key to exit.");

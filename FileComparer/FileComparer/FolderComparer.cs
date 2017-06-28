@@ -37,7 +37,7 @@ namespace FileComparer
                 Console.WriteLine($"Could not find folder: {folder}");
                 return;
             }
-            var files = Directory.EnumerateFiles(folder);
+            var files = Directory.EnumerateFiles(folder,"*",SearchOption.AllDirectories);
             foreach (var file in files)
                 _counter.Add(file);
         }
