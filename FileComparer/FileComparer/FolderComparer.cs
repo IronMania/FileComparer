@@ -14,7 +14,7 @@ namespace FileComparer
             _counter = calculator;
         }
 
-        public void Compare( IEnumerable<string> folders,List<string> pattern)
+        public void Compare(IEnumerable<string> folders, List<string> pattern)
         {
             foreach (var folder in folders)
                 AddHashsToCounter(folder,pattern);
